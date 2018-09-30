@@ -7,10 +7,9 @@
 
     using ZbW.Testing.Dms.Client.Views;
 
-    internal class LoginViewModel : BindableBase
+    public class LoginViewModel : BindableBase
     {
         private readonly LoginView _loginView;
-
         private string _benutzername;
 
         public LoginViewModel(LoginView loginView)
@@ -26,16 +25,12 @@
 
         public string Benutzername
         {
-            get
-            {
-                return _benutzername;
-            }
-
+            get => _benutzername;
             set
             {
                 if (SetProperty(ref _benutzername, value))
                 {
-                    CmdLogin.RaiseCanExecuteChanged();
+                    CmdLogin?.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -45,7 +40,7 @@
             return !string.IsNullOrEmpty(Benutzername);
         }
 
-        private void OnCmdAbbrechen()
+        private static void OnCmdAbbrechen()
         {
             Application.Current.Shutdown();
         }
@@ -57,10 +52,8 @@
                 MessageBox.Show("Bitte tragen Sie einen Benutzernamen ein...");
                 return;
             }
-
             var searchView = new MainView(Benutzername);
             searchView.Show();
-
             _loginView.Close();
         }
     }

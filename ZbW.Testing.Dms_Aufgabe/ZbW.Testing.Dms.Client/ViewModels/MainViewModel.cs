@@ -10,7 +10,6 @@
     internal class MainViewModel : BindableBase
     {
         private string _benutzer;
-
         private UserControl _content;
 
         public MainViewModel(string benutzername)
@@ -22,32 +21,17 @@
 
         public string Benutzer
         {
-            get
-            {
-                return _benutzer;
-            }
-
-            set
-            {
-                SetProperty(ref _benutzer, value);
-            }
+            get => _benutzer;
+            set => SetProperty(ref _benutzer, value);
         }
 
         public UserControl Content
         {
-            get
-            {
-                return _content;
-            }
-
-            set
-            {
-                SetProperty(ref _content, value);
-            }
+            get => _content;
+            set => SetProperty(ref _content, value);
         }
 
         public DelegateCommand CmdNavigateToSearch { get; }
-
         public DelegateCommand CmdNavigateToDocumentDetail { get; }
 
         private void OnCmdNavigateToSearch()

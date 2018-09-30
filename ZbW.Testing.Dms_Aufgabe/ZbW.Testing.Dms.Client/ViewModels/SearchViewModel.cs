@@ -1,5 +1,8 @@
-﻿namespace ZbW.Testing.Dms.Client.ViewModels
+﻿using ZbW.Testing.Dms.Client.Services;
+
+namespace ZbW.Testing.Dms.Client.ViewModels
 {
+    using System;
     using System.Collections.Generic;
 
     using Prism.Commands;
@@ -11,89 +14,55 @@
     internal class SearchViewModel : BindableBase
     {
         private List<MetadataItem> _filteredMetadataItems;
-
         private MetadataItem _selectedMetadataItem;
-
         private string _selectedTypItem;
-
         private string _suchbegriff;
-
         private List<string> _typItems;
+        private readonly DocumentService _documentService;
+        private readonly SearchDocument _searchDocument;
 
         public SearchViewModel()
         {
             TypItems = ComboBoxItems.Typ;
-
             CmdSuchen = new DelegateCommand(OnCmdSuchen);
             CmdReset = new DelegateCommand(OnCmdReset);
             CmdOeffnen = new DelegateCommand(OnCmdOeffnen, OnCanCmdOeffnen);
+            _searchDocument = new SearchDocument();
+            FilteredMetadataItems = _searchDocument.GetAllMetadataItems();
+            _documentService = new DocumentService();
         }
-
+        #region Properties
         public DelegateCommand CmdOeffnen { get; }
-
         public DelegateCommand CmdSuchen { get; }
-
         public DelegateCommand CmdReset { get; }
 
         public string Suchbegriff
         {
-            get
-            {
-                return _suchbegriff;
-            }
-
-            set
-            {
-                SetProperty(ref _suchbegriff, value);
-            }
+            get => _suchbegriff;
+            set => SetProperty(ref _suchbegriff, value);
         }
 
         public List<string> TypItems
         {
-            get
-            {
-                return _typItems;
-            }
-
-            set
-            {
-                SetProperty(ref _typItems, value);
-            }
+            get => _typItems;
+            set => SetProperty(ref _typItems, value);
         }
 
         public string SelectedTypItem
         {
-            get
-            {
-                return _selectedTypItem;
-            }
-
-            set
-            {
-                SetProperty(ref _selectedTypItem, value);
-            }
+            get => _selectedTypItem;
+            set => SetProperty(ref _selectedTypItem, value);
         }
 
         public List<MetadataItem> FilteredMetadataItems
         {
-            get
-            {
-                return _filteredMetadataItems;
-            }
-
-            set
-            {
-                SetProperty(ref _filteredMetadataItems, value);
-            }
+            get => _filteredMetadataItems;
+            set => SetProperty(ref _filteredMetadataItems, value);
         }
 
         public MetadataItem SelectedMetadataItem
         {
-            get
-            {
-                return _selectedMetadataItem;
-            }
-
+            get => _selectedMetadataItem;
             set
             {
                 if (SetProperty(ref _selectedMetadataItem, value))
@@ -102,7 +71,9 @@
                 }
             }
         }
+        #endregion
 
+        #region Methods
         private bool OnCanCmdOeffnen()
         {
             return SelectedMetadataItem != null;
@@ -110,17 +81,20 @@
 
         private void OnCmdOeffnen()
         {
-            // TODO: Add your Code here
+            _documentService.OpenFile(_documentService.SerializeTestable, SelectedMetadataItem);
         }
 
         private void OnCmdSuchen()
         {
-            // TODO: Add your Code here
+            FilteredMetadataItems = _searchDocument.FilterMetadataItems(_selectedTypItem, _suchbegriff);
         }
 
         private void OnCmdReset()
         {
-            // TODO: Add your Code here
+            FilteredMetadataItems = _searchDocument.MetadataItems;
+            Suchbegriff = string.Empty;
+            SelectedTypItem = null;
         }
+        #endregion
     }
 }

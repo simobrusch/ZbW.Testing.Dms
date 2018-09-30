@@ -14,5 +14,10 @@
             InitializeComponent();
             DataContext = new SearchViewModel();
         }
+
+        private void DataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
